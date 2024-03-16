@@ -36,66 +36,6 @@ class Spark:
         return cls
 
     @classmethod
-    def add_config(cls, key: str, value: str) -> Self:
-        """
-        Add configuration to Spark session settings.
-
-        Args:
-            key (str):  The configuration key.
-            value (str): The configuration value.
-
-        Raises:
-            Exception: If attempting to modify configuration after Spark session creation.
-            ValueError: If either key or value is None.
-
-        Returns:
-            Spark: The Spark class for method chaining.
-        """
-        if cls._spark is not None:
-            raise Exception("Configuration method called after spark session build.")
-        if key is None or value is None:
-            raise ValueError("Both key and value must be provided.")
-
-        cls._configurations[key] = value
-        return cls
-
-    @classmethod
-    def delete_config(cls, key: str) -> Self:
-        """
-        Delete configuration from Spark session settings based on the key.
-
-        Args:
-            key (str):  The configuration key.
-
-        Raises:
-            Exception: If attempting to modify configuration after Spark session creation.
-            ValueError: If either key is None.
-            KeyError: If the key is not found in configurations.
-
-        Returns:
-            Spark: The Spark class for method chaining.
-        """
-        if cls._spark is not None:
-            raise Exception("Configuration method called after spark session build.")
-        if key is None:
-            raise ValueError("Key must be provided.")
-        try:
-            del cls._configurations[key]
-        except KeyError:
-            raise KeyError(f"Key '{key}' not found in configurations.")
-        return cls
-
-    @classmethod
-    def get_configurations(cls) -> dict:
-        """
-        Get the current configurations from the Spark session settings.
-
-        Returns:
-            dict: A dictionary containing the current configurations.
-        """
-        return cls._configurations.copy()
-
-    @classmethod
     def get_session(cls) -> SparkSession:
         """Get or create the Spark session with configured settings.
 

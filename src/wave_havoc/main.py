@@ -125,3 +125,17 @@ if __name__ == "__main__":
     df_filtered.show()
 
     spark.stop()
+
+############################## Stappen ##############################
+
+# 1. Eerst berekenen van gewenste output
+# 2. test voor alle bestanden (DONE)
+# 3. Output wegschrijven Dataframe, daarna pas berekenen
+
+# Setup correctly
+# Write tests
+# get request
+# Run in Docker
+# Include coldwaves
+
+# write logging code
