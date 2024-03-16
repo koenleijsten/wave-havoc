@@ -22,9 +22,9 @@ if __name__ == "__main__":
 
     # Download and extract data
     output_dir = f"{script_dir}/../.."
-    url = "https://gddassesmentdata.blob.core.windows.net/knmi-data/data.tgz?sp=r&st=2024-01-03T14:42:11Z&se=2025-01-03T22:42:11Z&spr=https&sv=2022-11-02&sr=c&sig=jcOeksvhjJGDTCM%2B2CzrjR3efJI7jq5a3SnT8aiQBc8%3D"
-    get_data(url=url, output_dir=output_dir)
-    extract_data(output_dir=output_dir, filter="data")
+    # url = "https://gddassesmentdata.blob.core.windows.net/knmi-data/data.tgz?sp=r&st=2024-01-03T14:42:11Z&se=2025-01-03T22:42:11Z&spr=https&sv=2022-11-02&sr=c&sig=jcOeksvhjJGDTCM%2B2CzrjR3efJI7jq5a3SnT8aiQBc8%3D"
+    # get_data(url=url, output_dir=output_dir)
+    # extract_data(output_dir=output_dir, filter="data")
 
     # Get raw data file locations
     data_directory = f"{output_dir}/data/"
