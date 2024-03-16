@@ -17,20 +17,19 @@ from pyspark.sql.types import (
 )
 
 if __name__ == "__main__":
-    # Set directories
-    script_dir = os.path.dirname(os.path.realpath(__file__))
-    output_dir = f"{script_dir}/../.."
+    # Set main directory
+    main_dir = f"{os.path.dirname(os.path.realpath(__file__))}/../.."
 
     # Remove existing data if it exists
-    # remove_existing_data(output_dir=output_dir)
+    # remove_existing_data(output_dir=main_dir)
 
     # Download and extract data
     # url = "https://gddassesmentdata.blob.core.windows.net/knmi-data/data.tgz?sp=r&st=2024-01-03T14:42:11Z&se=2025-01-03T22:42:11Z&spr=https&sv=2022-11-02&sr=c&sig=jcOeksvhjJGDTCM%2B2CzrjR3efJI7jq5a3SnT8aiQBc8%3D"
-    # get_data(url=url, output_dir=output_dir)
-    # extract_data(output_dir=output_dir, filter="data")
+    # get_data(url=url, output_dir=main_dir)
+    # extract_data(output_dir=main_dir, filter="data")
 
     # Get raw data file locations
-    data_directory = f"{output_dir}/data/"
+    data_directory = f"{main_dir}/data/"
     data_file_paths = get_data_file_paths(data_directory)
 
     # Get spark session
@@ -89,11 +88,10 @@ if __name__ == "__main__":
 
 # 1. Eerst berekenen van gewenste output
 # 2. test voor alle bestanden (DONE)
-# 3. Output wegschrijven Dataframe, daarna pas berekenen
 
 # Setup correctly
 # Write tests
-# get request
+# get request (DONE)
 # Run in Docker
 # Include coldwaves
 

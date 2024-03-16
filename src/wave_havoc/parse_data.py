@@ -36,15 +36,10 @@ def get_column_start_positions(header_line: str) -> List[int]:
     Returns:
         List[int]: A list of starting positions for each column.
     """
-    # Initialize the starting position list with 0 for the first column
     col_starts = [0]
-
-    # Find the starting positions of each column by searching for consecutive whitespace
-    # characters and adding their end positions to the list
     col_starts.extend(
         match.end() for match in re.finditer(r"\s{2,}", header_line.lstrip("#"))
     )
-
     return col_starts
 
 
