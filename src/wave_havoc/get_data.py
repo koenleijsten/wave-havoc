@@ -1,7 +1,18 @@
 import os
 import requests
 import tarfile
+import shutil
 from typing import Optional
+
+
+def remove_existing_data(output_dir: str) -> None:
+    """Remove the output directory if it exists.
+
+    Args:
+        output_dir (str): The path to the output directory.
+    """
+    if os.path.exists(output_dir):
+        shutil.rmtree(output_dir)
 
 
 def get_data(url: str, output_dir: str) -> None:

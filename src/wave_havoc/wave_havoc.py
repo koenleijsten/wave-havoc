@@ -1,7 +1,7 @@
 import os
 import re
 from spark import Spark
-from get_data import get_data, extract_data
+from get_data import get_data, extract_data, remove_existing_data
 from parse_data import (
     get_data_file_paths,
     get_column_start_positions,
@@ -17,11 +17,14 @@ from pyspark.sql.types import (
 )
 
 if __name__ == "__main__":
-    # Set script directory
+    # Set directories
     script_dir = os.path.dirname(os.path.realpath(__file__))
+    output_dir = f"{script_dir}/../.."
+
+    # Remove existing data if it exists
+    # remove_existing_data(output_dir=output_dir)
 
     # Download and extract data
-    output_dir = f"{script_dir}/../.."
     # url = "https://gddassesmentdata.blob.core.windows.net/knmi-data/data.tgz?sp=r&st=2024-01-03T14:42:11Z&se=2025-01-03T22:42:11Z&spr=https&sv=2022-11-02&sr=c&sig=jcOeksvhjJGDTCM%2B2CzrjR3efJI7jq5a3SnT8aiQBc8%3D"
     # get_data(url=url, output_dir=output_dir)
     # extract_data(output_dir=output_dir, filter="data")
