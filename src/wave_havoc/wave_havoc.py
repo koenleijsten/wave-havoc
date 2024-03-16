@@ -1,8 +1,11 @@
 import os
 import re
 from spark import Spark
-from datetime import datetime
-from typing import List
+from data_parser import (
+    get_data_file_paths,
+    parse_line,
+    convert_line_values,
+)
 from pyspark.sql.types import (
     StructType,
     StructField,
@@ -11,66 +14,10 @@ from pyspark.sql.types import (
     TimestampType,
 )
 
-
-def get_data_file_paths(directory_path: str) -> List[str]:
-    """List all files in a directory and return their paths.
-
-    Args:
-        directory_path (str): The path to the directory containing data files.
-
-    Returns:
-        List[str]: A list of file paths.
-    """
-    return [
-        os.path.join(directory_path, file_name)
-        for file_name in os.listdir(directory_path)
-    ]
-
-
-def parse_line(line: str, col_starts: List[int]) -> List[str]:
-    """Parse a line of data based on column starts.
-
-    Args:
-        line (str): The line of data to parse.
-        col_starts (List[int]): A list of column start positions.
-
-    Returns:
-        List[str]: A list of parsed values.
-    """
-    return [
-        line[start:end].strip() if end else line[start:].strip()
-        for start, end in zip(col_starts, col_starts[1:])
-    ]
-
-
-def convert_line_values(values: List[str], schema: StructType) -> List:
-    """Convert parsed values to correct data types based on schema.
-
-    Args:
-        values (List[str]): A list of parsed values.
-        schema (StructType): The schema defining the data types of each column.
-
-    Returns:
-        List: A list of converted values.
-    """
-    converted_values = []
-    for i, value in enumerate(values):
-        field_type = schema.fields[i].dataType
-        if field_type == TimestampType():
-            converted_values.append(
-                datetime.strptime(value, "%Y-%m-%d %H:%M:%S") if value != "" else None
-            )
-        elif field_type == DoubleType():
-            converted_values.append(float(value) if value != "" else None)
-        else:
-            converted_values.append(value)
-    return converted_values
-
-
 if __name__ == "__main__":
     # Get raw data file locations
-    directory_path = os.path.join(os.getcwd(), "data", "raw")
-    data_file_paths = get_data_file_paths(directory_path)
+    script_dir = os.path.dirname(os.path.realpath(__file__))
+    data_file_paths = get_data_file_paths(f"{script_dir}/../../data/raw")
 
     # Get spark session
     spark = Spark.set_master("local[*]").get_session()
@@ -78,7 +25,7 @@ if __name__ == "__main__":
     # Create RDD from text files
     all_files_rdd = spark.sparkContext.textFile(",".join(data_file_paths))
 
-    # Filter header lines
+    # Filter first header line
     header_pattern = re.compile(r"#\s*DTG.*LOCATION")
     header_line = all_files_rdd.filter(lambda line: header_pattern.match(line)).first()
 
@@ -110,7 +57,7 @@ if __name__ == "__main__":
         ]
     )
 
-    # Skip header line, filter comment lines, and parse data
+    # Filter comment lines, and parse data
     data_rdd = (
         all_files_rdd.filter(lambda line: not line.startswith("#"))
         .map(lambda line: parse_line(line, col_starts))
