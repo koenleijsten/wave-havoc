@@ -126,7 +126,7 @@ def main():
     df_threshold_filtered = df_threshold.filter(F.col("above_threshold") != 0)
 
     # Define a window specification for ordering by date
-    window = Window.partitionBy("date").orderBy("date")
+    window = Window.partitionBy("location").orderBy("date")
 
     # Use lag function to check the previous date
     df_with_lag = df_threshold_filtered.withColumn(
