@@ -12,6 +12,7 @@ class Spark:
         "spark.sql.session.timeZone": "Etc/UTC",
         "spark.driver.extraJavaOptions": "-Duser.timezone=UTC",
         "spark.executor.extraJavaOptions": "-Duser.timezone=UTC",
+        "spark.executor.memory": "4g",
     }
     _master = None
 
