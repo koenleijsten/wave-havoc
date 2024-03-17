@@ -53,6 +53,7 @@ urllib3 = "2.2.1"
 virtualenv = "20.25.1"
 xattr = "1.1.0"
 pre-commit = "^3.6.2"
+pytest = "^8.1.1"
 
 
 [build-system]

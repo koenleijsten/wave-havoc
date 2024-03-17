@@ -43,16 +43,16 @@ def get_column_start_positions(header_line: str) -> List[int]:
         List[int]: A list of starting positions for each column.
 
     Raises:
-        RuntimeError: If there's an error while parsing the header line.
+        ValueError: If the headerline is not properly parsed
     """
-    try:
-        col_starts = [0]
-        col_starts.extend(
-            match.end() for match in re.finditer(r"\s{2,}", header_line.lstrip("#"))
-        )
-        return col_starts
-    except Exception as e:
-        raise RuntimeError(f"Error occurred while parsing header line: {e}")
+
+    col_starts = [0]
+    col_starts.extend(
+        match.end() for match in re.finditer(r"\s{2,}", header_line.lstrip("#"))
+    )
+    if len(col_starts) <= 1:
+        raise ValueError("Incorrect header line, no columns found.")
+    return col_starts
 
 
 def parse_line(line: str, col_starts: List[int]) -> List[str]:
