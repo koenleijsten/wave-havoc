@@ -17,11 +17,17 @@ def get_data_file_paths(directory_path: str) -> List[str]:
 
     Returns:
         List[str]: A list of file paths.
+
+    Raises:
+        OSError: If there's an error while listing files in the directory.
     """
-    return [
-        os.path.join(directory_path, file_name)
-        for file_name in os.listdir(directory_path)
-    ]
+    try:
+        return [
+            os.path.join(directory_path, file_name)
+            for file_name in os.listdir(directory_path)
+        ]
+    except OSError as e:
+        raise OSError(f"Error occurred while listing files in {directory_path}: {e}")
 
 
 def get_column_start_positions(header_line: str) -> List[int]:
@@ -35,12 +41,18 @@ def get_column_start_positions(header_line: str) -> List[int]:
 
     Returns:
         List[int]: A list of starting positions for each column.
+
+    Raises:
+        RuntimeError: If there's an error while parsing the header line.
     """
-    col_starts = [0]
-    col_starts.extend(
-        match.end() for match in re.finditer(r"\s{2,}", header_line.lstrip("#"))
-    )
-    return col_starts
+    try:
+        col_starts = [0]
+        col_starts.extend(
+            match.end() for match in re.finditer(r"\s{2,}", header_line.lstrip("#"))
+        )
+        return col_starts
+    except Exception as e:
+        raise RuntimeError(f"Error occurred while parsing header line: {e}")
 
 
 def parse_line(line: str, col_starts: List[int]) -> List[str]:
@@ -52,11 +64,17 @@ def parse_line(line: str, col_starts: List[int]) -> List[str]:
 
     Returns:
         List[str]: A list of parsed values.
+
+    Raises:
+        RuntimeError: If there's an issue while parsing the line.
     """
-    return [
-        line[start:end].strip() if end else line[start:].strip()
-        for start, end in zip(col_starts, col_starts[1:])
-    ]
+    try:
+        return [
+            line[start:end].strip() if end else line[start:].strip()
+            for start, end in zip(col_starts, col_starts[1:])
+        ]
+    except Exception as e:
+        raise RuntimeError(f"Error occurred while parsing line: {e}")
 
 
 def convert_line_values(values: List[str], schema: StructType) -> List:
@@ -68,16 +86,26 @@ def convert_line_values(values: List[str], schema: StructType) -> List:
 
     Returns:
         List: A list of converted values.
+
+    Raises:
+        ValueError: If a conversion fails.
     """
     converted_values = []
     for i, value in enumerate(values):
         field_type = schema.fields[i].dataType
-        if field_type == TimestampType():
-            converted_values.append(
-                datetime.strptime(value, "%Y-%m-%d %H:%M:%S") if value != "" else None
+        try:
+            if field_type == TimestampType():
+                converted_values.append(
+                    datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
+                    if value != ""
+                    else None
+                )
+            elif field_type == DoubleType():
+                converted_values.append(float(value) if value != "" else None)
+            else:
+                converted_values.append(value)
+        except ValueError as e:
+            raise ValueError(
+                f"Error converting value '{value}' to type {field_type}: {e}"
             )
-        elif field_type == DoubleType():
-            converted_values.append(float(value) if value != "" else None)
-        else:
-            converted_values.append(value)
     return converted_values
