@@ -16,5 +16,5 @@ The Heatwave Analysis Tool follows a modular architecture, consisting of the fol
 
 ### Overview
 
-![alt text](image.png)
+![alt text](docs/image.png)
 
