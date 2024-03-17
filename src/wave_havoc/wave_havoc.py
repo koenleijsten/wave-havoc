@@ -36,12 +36,12 @@ def main():
     )
 
     # Remove existing data if it exists
-    # remove_existing_data(output_dir=main_dir)
+    remove_existing_data(output_dir=main_dir)
 
     # Download and extract data
-    # url = "https://gddassesmentdata.blob.core.windows.net/knmi-data/data.tgz?sp=r&st=2024-01-03T14:42:11Z&se=2025-01-03T22:42:11Z&spr=https&sv=2022-11-02&sr=c&sig=jcOeksvhjJGDTCM%2B2CzrjR3efJI7jq5a3SnT8aiQBc8%3D"
-    # get_data(url=url, output_dir=main_dir)
-    # extract_data(output_dir=main_dir, filter="data")
+    url = "https://gddassesmentdata.blob.core.windows.net/knmi-data/data.tgz?sp=r&st=2024-01-03T14:42:11Z&se=2025-01-03T22:42:11Z&spr=https&sv=2022-11-02&sr=c&sig=jcOeksvhjJGDTCM%2B2CzrjR3efJI7jq5a3SnT8aiQBc8%3D"
+    get_data(url=url, output_dir=main_dir)
+    extract_data(output_dir=main_dir, filter="data")
 
     # Get raw data file locations
     data_directory = f"{main_dir}/data/"
@@ -51,7 +51,7 @@ def main():
     spark = Spark.set_master("local[*]").get_session()
 
     # Create RDD from text files
-    rdd = spark.sparkContext.textFile(",".join(data_file_paths[:2]))
+    rdd = spark.sparkContext.textFile(",".join(data_file_paths))
 
     # Filter first header line
     header_pattern = re.compile(r"#\s*DTG.*LOCATION")
@@ -185,19 +185,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-############################## Stappen ##############################
-
-
-# Add error handling
-# Setup correctly (including documentation)
-# Write tests
-
-# Run in Docker
-
-# Include coldwaves
-# write logging code
-
-# get request (DONE)
-# 1. Eerst berekenen van gewenste output (DONE)
-# 2. test voor alle bestanden (DONE)
