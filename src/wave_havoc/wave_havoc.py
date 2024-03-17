@@ -1,6 +1,5 @@
 import os
 import re
-import time
 from pyspark.sql import functions as F
 from dotenv import load_dotenv
 from pyspark.sql.window import Window
@@ -27,12 +26,14 @@ def main():
 
     # Load ENV variables
     load_dotenv()
-    NUM_WORKERS = os.getenv("NUM_WORKERS")
+    NUM_WORKERS = int(os.getenv("NUM_WORKERS"))
     LOCATION = os.getenv("LOCATION")
-    THRESHOLD_TEMP = os.getenv("THRESHOLD_TEMP")
-    TROPICAL_DAY_TEMP = os.getenv("TROPICAL_DAY_TEMP")
-    DURATION_IN_DAYS_THRESHOLD = os.getenv("DURATION_IN_DAYS_THRESHOLD")
-    NUMBER_OF_TROPICAL_DAYS_THRESHOLD = os.getenv("NUMBER_OF_TROPICAL_DAYS_THRESHOLD")
+    THRESHOLD_TEMP = int(os.getenv("THRESHOLD_TEMP"))
+    TROPICAL_DAY_TEMP = int(os.getenv("TROPICAL_DAY_TEMP"))
+    DURATION_IN_DAYS_THRESHOLD = int(os.getenv("DURATION_IN_DAYS_THRESHOLD"))
+    NUMBER_OF_TROPICAL_DAYS_THRESHOLD = int(
+        os.getenv("NUMBER_OF_TROPICAL_DAYS_THRESHOLD")
+    )
 
     # Remove existing data if it exists
     # remove_existing_data(output_dir=main_dir)
