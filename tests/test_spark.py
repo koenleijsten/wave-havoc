@@ -4,28 +4,31 @@ from src.wave_havoc.spark import Spark
 
 
 class TestSpark(unittest.TestCase):
+    def tearDown(self):
+        if Spark._spark is not None:
+            Spark._spark.stop()
+        Spark._master = None
+        Spark._spark = None
+
     def test_get_session(self):
         session = Spark.set_master("local[*]").get_session()
         self.assertIsInstance(session, SparkSession)
 
     def test_get_existing_session(self):
-        session = Spark.get_session()
-        self.assertIsInstance(session, SparkSession)
-        self.assertEqual(session.sparkContext.master, "local[*]")
-        session.stop()
+        session1 = Spark.set_master("local[*]").get_session()
+        session2 = Spark.get_session()
+        self.assertIsInstance(session2, SparkSession)
+        self.assertEqual(session2.sparkContext.master, "local[*]")
 
     def test_set_master_success(self):
-        Spark._master = None
-        spark = Spark.set_master("local[*]").get_session()
+        Spark.set_master("local[*]").get_session()
         self.assertEqual(Spark._master, "local[*]")
-        spark.stop()
 
     def test_set_master_after_creation(self):
-        spark = Spark.get_session()
+        Spark.set_master("local[*]").get_session()
 
         with self.assertRaises(RuntimeError):
             Spark.set_master("local[*]")
-        spark.stop()
 
 
 if __name__ == "__main__":
