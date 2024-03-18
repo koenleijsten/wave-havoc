@@ -7,6 +7,10 @@ This tool analyzes weather data to identify heatwaves based on specific criteria
 Before running the tool, make sure you have Python and Apache Spark installed on your system. You can install Python dependencies using poetry or pip:
 
 ```bash
+poetry install
+```
+
+```bash
 pip install -r requirements.txt
 ```
 
