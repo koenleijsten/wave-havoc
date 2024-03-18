@@ -36,16 +36,16 @@ def main():
         os.getenv("NUMBER_OF_TROPICAL_DAYS_THRESHOLD")
     )
 
-    # Remove existing data if it exists
-    remove_existing_data(output_dir=data_directory)
+    # # Remove existing data if it exists
+    # remove_existing_data(output_dir=data_directory)
 
-    # Download and extract data
-    url = "https://gddassesmentdata.blob.core.windows.net/knmi-data/data.tgz?sp=r&st=2024-01-03T14:42:11Z&se=2025-01-03T22:42:11Z&spr=https&sv=2022-11-02&sr=c&sig=jcOeksvhjJGDTCM%2B2CzrjR3efJI7jq5a3SnT8aiQBc8%3D"
-    get_data(url=url, output_dir=main_dir)
-    extract_data(output_dir=main_dir, filter="data")
+    # # Download and extract data
+    # url = "https://gddassesmentdata.blob.core.windows.net/knmi-data/data.tgz?sp=r&st=2024-01-03T14:42:11Z&se=2025-01-03T22:42:11Z&spr=https&sv=2022-11-02&sr=c&sig=jcOeksvhjJGDTCM%2B2CzrjR3efJI7jq5a3SnT8aiQBc8%3D"
+    # get_data(url=url, output_dir=main_dir)
+    # extract_data(output_dir=main_dir, filter="data")
 
-    # Remove archive file
-    clean_up_data_archive(output_dir=main_dir)
+    # # Remove archive file
+    # clean_up_data_archive(output_dir=main_dir)
 
     # Get raw data file locations
     data_file_paths = get_data_file_paths(data_directory)
@@ -54,7 +54,7 @@ def main():
     spark = Spark.set_master("local[*]").get_session()
 
     # Create RDD from text files
-    rdd = spark.sparkContext.textFile(",".join(data_file_paths))
+    rdd = spark.sparkContext.textFile(",".join(data_file_paths[:5]))
 
     # Filter first header line
     header_pattern = re.compile(r"#\s*DTG.*LOCATION")
@@ -171,11 +171,11 @@ def main():
         )
     )
 
-    # Only select heatwaves
-    df_result = df_result.filter(
-        (F.col("duration_in_days") >= DURATION_IN_DAYS_THRESHOLD)
-        & (F.col("number_of_tropical_days") >= NUMBER_OF_TROPICAL_DAYS_THRESHOLD)
-    )
+    # # Only select heatwaves
+    # df_result = df_result.filter(
+    #     (F.col("duration_in_days") >= DURATION_IN_DAYS_THRESHOLD)
+    #     & (F.col("number_of_tropical_days") >= NUMBER_OF_TROPICAL_DAYS_THRESHOLD)
+    # )
 
     # Convert output to JSON
     output = df_result.toJSON().collect()
