@@ -21,8 +21,9 @@ from pyspark.sql.types import (
 
 
 def main():
-    # Set main directory
+    # Set directories
     main_dir = f"{os.path.dirname(os.path.realpath(__file__))}/../.."
+    data_directory = f"{main_dir}/data/"
 
     # Load ENV variables
     load_dotenv()
@@ -36,7 +37,7 @@ def main():
     )
 
     # Remove existing data if it exists
-    remove_existing_data(output_dir=main_dir)
+    remove_existing_data(output_dir=data_directory)
 
     # Download and extract data
     url = "https://gddassesmentdata.blob.core.windows.net/knmi-data/data.tgz?sp=r&st=2024-01-03T14:42:11Z&se=2025-01-03T22:42:11Z&spr=https&sv=2022-11-02&sr=c&sig=jcOeksvhjJGDTCM%2B2CzrjR3efJI7jq5a3SnT8aiQBc8%3D"
@@ -44,7 +45,6 @@ def main():
     extract_data(output_dir=main_dir, filter="data")
 
     # Get raw data file locations
-    data_directory = f"{main_dir}/data/"
     data_file_paths = get_data_file_paths(data_directory)
 
     # Get spark session
