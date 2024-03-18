@@ -2,7 +2,12 @@ import os
 import shutil
 import unittest
 from unittest.mock import patch, MagicMock, mock_open
-from src.wave_havoc.get_data import remove_existing_data, get_data, extract_data
+from src.wave_havoc.get_data import (
+    remove_existing_data,
+    get_data,
+    extract_data,
+    clean_up_data_archive,
+)
 
 
 class TestFunctions(unittest.TestCase):
@@ -48,7 +53,9 @@ class TestFunctions(unittest.TestCase):
         mock_open.return_value = handle
         mock_get.side_effect = Exception("Some error")
 
-        get_data(url, output_dir)
+        with self.assertRaises(Exception) as context:
+            get_data(url, output_dir)
+
         mock_get.assert_called_with(url)
         handle.write.assert_not_called()
 
@@ -61,16 +68,35 @@ class TestFunctions(unittest.TestCase):
         extract_data("output_dir")
         mock_tar_open.assert_called_once_with("output_dir/data.tgz", "r:gz")
         mock_tarfile.extractall.assert_called_once_with("output_dir", filter=None)
+        mock_print.assert_not_called()
 
     @patch("tarfile.open")
     @patch("builtins.print")
-    def test_extract_data_error(self, mock_print, mock_tar_open):
+    def test_extract_data_failure(self, mock_print, mock_tar_open):
         mock_tar_open.side_effect = FileNotFoundError("File not found")
 
-        extract_data("output_dir")
-        mock_print.assert_called_once_with(
-            "Error occurred while extracting data: File not found"
-        )
+        with self.assertRaises(FileNotFoundError) as context:
+            extract_data("output_dir")
+
+        mock_print.assert_not_called()
+
+    @patch("os.path.exists", return_value=True)
+    @patch("os.remove")
+    def test_clean_up_data_archive_success(self, mock_remove, mock_exists):
+        output_dir = "/path/to/output"
+
+        clean_up_data_archive(output_dir)
+        mock_exists.assert_called_once_with(os.path.join(output_dir, "data.tgz"))
+        mock_remove.assert_called_once_with(os.path.join(output_dir, "data.tgz"))
+
+    @patch("os.path.exists", return_value=False)
+    @patch("os.remove")
+    def test_clean_up_data_archive_failure(self, mock_remove, mock_exists):
+        output_dir = "/path/to/output"
+
+        clean_up_data_archive(output_dir)
+        mock_exists.assert_called_once_with(os.path.join(output_dir, "data.tgz"))
+        mock_remove.assert_not_called()
 
 
 if __name__ == "__main__":
