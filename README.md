@@ -28,6 +28,7 @@ The tool requires several environment variables to be set:
 - TROPICAL_DAY_TEMP: Temperature threshold for a day to be considered tropical.
 - DURATION_IN_DAYS_THRESHOLD: Minimum duration of a heatwave in days.
 - NUMBER_OF_TROPICAL_DAYS_THRESHOLD: Minimum number of tropical days within a heatwave.
+
 These variables can be set in a .env file in the project directory.
 
 ## Output
