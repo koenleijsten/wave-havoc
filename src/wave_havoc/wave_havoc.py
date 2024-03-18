@@ -51,7 +51,7 @@ def main():
     data_file_paths = get_data_file_paths(data_directory)
 
     # Get spark session
-    spark = Spark.set_master("local[*]").get_session()
+    spark = Spark.set_master(f"local[{NUM_WORKERS}]").get_session()
 
     # Create RDD from text files
     rdd = spark.sparkContext.textFile(",".join(data_file_paths))
