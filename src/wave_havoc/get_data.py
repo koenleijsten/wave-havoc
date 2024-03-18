@@ -11,11 +11,8 @@ def remove_existing_data(output_dir: str) -> None:
     Args:
         output_dir (str): The path to the output directory.
     """
-    try:
-        if os.path.exists(output_dir):
-            shutil.rmtree(output_dir)
-    except Exception as e:
-        raise e
+    if os.path.exists(output_dir):
+        shutil.rmtree(output_dir)
 
 
 def get_data(url: str, output_dir: str) -> None:
