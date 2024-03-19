@@ -1,0 +1,16 @@
+#macOS
+.DS_Store
+
+# Python bytecode files
+*.pyc
+
+# Virtual environment directories
+venv/
+
+# Dependency management files
+poetry.lock
+pyproject.toml
+
+# IDE directories
+.idea/
+.vscode/

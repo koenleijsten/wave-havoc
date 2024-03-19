@@ -25,6 +25,7 @@ def get_data_file_paths(directory_path: str) -> List[str]:
         return [
             os.path.join(directory_path, file_name)
             for file_name in os.listdir(directory_path)
+            if not file_name.startswith(".DS_Store")
         ]
     except OSError as e:
         raise OSError(f"Error occurred while listing files in {directory_path}: {e}")
