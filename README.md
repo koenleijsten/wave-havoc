@@ -23,6 +23,15 @@ cd ./src/wave_havoc
 python wave_havoc.py
 ```
 
+Alternatively, you can also build and run the Docker container using the provided Dockerfile:
+
+```bash
+docker build -t wave_havoc .
+docker run wave_havoc
+```
+
+This will build the Docker image tagged as wave_havoc and then run a container from that image.
+
 ## Configuration
 The tool requires several environment variables to be set:
 
